@@ -35,9 +35,15 @@ def create_app():
 app, api = create_app() 
 
 
-from applications.auth_api import Login
+from applications.auth_api import Login, Register, Logout
 
 api.add_resource(Login,'/login')
+api.add_resource(Register,'/register')
+api.add_resource(Logout,'/logout')
+
+from applications.store_management_api import AllCategories, Category
+api.add_resource(Category,'/category')
+api.add_resource(AllCategories,'/get_all_categories')
 
 if __name__ == '__main__':
     app.run(debug = True)

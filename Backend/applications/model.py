@@ -1,13 +1,14 @@
 from applications.database import db
+from flask_security import UserMixin, RoleMixin
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     username = db.Column(db.String(30),primary_key=True)
     email = db.Column(db.String(50),nullable=False,unique=True)
     password = db.Column(db.String(50),nullable=False)
     address = db.Column(db.String(100),nullable=True)
     fs_uniquifier = db.Column(db.String(255), unique=True, nullable=False)
     fs_token_uniquifier = db.Column(db.String(255),unique=True)
-    active = db.Column(db.Boolean,nullable=False)
+    active = db.Column(db.Boolean())
 
 
     #Relationships
@@ -16,7 +17,7 @@ class User(db.Model):
     def __repr__(self):
         return f'<User {self.username}>'
     
-class Role(db.Model):
+class Role(db.Model, RoleMixin):
     role_id = db.Column(db.Integer,primary_key=True)
     name = db.Column(db.String(30),nullable=False)
     description = db.Column(db.String(100),nullable=True)
