@@ -1,5 +1,5 @@
 from flask_restful import Resource, marshal_with
-from flask import make_response, jsonify, request
+from flask import make_response, jsonify, request as req
 from flask_security import auth_token_required, roles_required, roles_accepted, current_user
 from applications.model import *
 from applications.marshal_fields import *
@@ -24,7 +24,7 @@ class Category(Resource):
     @auth_token_required
     @roles_accepted('admin','manager')
     def post(self):
-        data = request.get_json()
+        data = req.get_json()
 
 
         name = data.get('name')
@@ -90,7 +90,7 @@ class Category(Resource):
     @auth_token_required
     @roles_accepted('admin','manager')
     def put(self,category_id):
-        data = request.get_json()
+        data = req.get_json()
 
         category = Categories.query.get(category_id)
 
