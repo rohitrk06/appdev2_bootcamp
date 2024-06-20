@@ -11,6 +11,162 @@ class AllCategories(Resource):
         categories = Categories.query.all()
         return categories
 
+class AllProducts(Resource):
+    def get(self):
+        products = Product.query.all()
+        response = []
+        for product in products:
+            category = Categories.query.get(product.category_id)
+            response.append({
+                'product_id':product.product_id,
+                'name':product.name,
+                'description':product.description,
+                'selling_price':product.selling_price,
+                'stock':product.stock,
+                'manufacture_date':product.manufacture_date,
+                'expiry_date':product.expiry_date,
+                'cost_price':product.cost_price,
+                'category':{
+                    'category_id':category.category_id,
+                    'name':category.name,
+                    'description':category.description
+                }
+            })
+        return make_response(jsonify(response),200)
+
+class Product(Resource):
+    def get(self, product_id):
+        product = Product.query.get(product_id)
+        if not product:
+            return make_response(jsonify({'message':'Product does not exist'}),404)
+        
+        category = Categories.query.get(product.category_id)
+        response = {
+            'product_id':product.product_id,
+            'name':product.name,
+            'description':product.description,
+            'selling_price':product.selling_price,
+            'stock':product.stock,
+            'manufacture_date':product.manufacture_date,
+            'expiry_date':product.expiry_date,
+            'cost_price':product.cost_price,
+            'category':{
+                'category_id':category.category_id,
+                'name':category.name,
+                'description':category.description
+            }
+        }
+        return make_response(jsonify(response),200)
+
+
+    @auth_token_required
+    @roles_required('manager')
+    def post(self):
+        data = req.get_json()
+
+        name = data.get('name')
+        description = data.get('description')
+        selling_price = data.get('selling_price')
+        stock = data.get('stock')
+        manufacture_date = data.get('manufacture_date')
+        expiry_date = data.get('expiry_date')
+        cost_price = data.get('cost_price')
+        category_name = data.get('category_name')
+
+        if not name or not selling_price or not stock or not manufacture_date or not cost_price or not category_name:
+            return make_response(jsonify({'message':'All fields are required'}),400)
+        
+        category = Categories.query.filter_by(name=category_name).first()
+        if not category:
+            return make_response(jsonify({'message':'Category does not exist'}),404)
+        
+        try:
+            product = Product(name=name,description=description,selling_price=selling_price,stock=stock,manufacture_date=manufacture_date,expiry_date=expiry_date,cost_price=cost_price,category_id=category.category_id)
+            db.session.add(product)
+            db.session.commit()
+            response = {
+                'message':'Product added successfully',
+                'product':{
+                    'product_id':product.product_id,
+                    'name':product.name,
+                    'description':product.description,
+                    'selling_price':product.selling_price,
+                    'stock':product.stock,
+                    'manufacture_date':product.manufacture_date,
+                    'expiry_date':product.expiry_date,
+                    'cost_price':product.cost_price,
+                    'category_id':product.category_id
+                }
+            }
+            return make_response(jsonify(response),201)
+        except Exception as e:
+            return make_response(jsonify({'message':str(e)}),400)
+        
+    @auth_token_required
+    @roles_required('manager')
+    def put(self,product_id):
+        product = Product.query.get(product_id)
+        if not product:
+            return make_response(jsonify({'message':'Product does not exist'}),404)
+        
+        data = req.get_json()
+
+        name = data.get('name')
+        description = data.get('description')
+        selling_price = data.get('selling_price')
+        stock = data.get('stock')
+        manufacture_date = data.get('manufacture_date')
+        expiry_date = data.get('expiry_date')
+        cost_price = data.get('cost_price')
+        category_name = data.get('category_name')
+
+        if not name and not description and not selling_price and not stock and not manufacture_date and not cost_price and not category_name and not expiry_date:
+            return make_response(jsonify({'message':'Edit request is empty with any data'}),400)
+        
+        if name:
+            product.name = name
+        if description:
+            product.description = description
+        if selling_price:
+            product.selling_price = selling_price
+        if stock:
+            product.stock = stock
+        if manufacture_date:
+            product.manufacture_date = manufacture_date
+        if expiry_date:
+            product.expiry_date = expiry_date
+        if cost_price:
+            product.cost_price = cost_price
+        if category_name:
+            category = Categories.query.filter_by(name=category_name).first()
+            if not category:
+                return make_response(jsonify({'message':'Category does not exist'}),404)
+            product.category_id = category.category_id
+        
+        try:
+            db.session.commit()
+            return make_response(jsonify({'message':'Product updated successfully'}),200)
+        except Exception as e:
+            return make_response(jsonify({'message':str(e)}),400)
+        
+    @auth_token_required
+    @roles_required('manager')
+    def delete(self,product_id):
+        product = Product.query.get(product_id)
+        if not product:
+            return make_response(jsonify({'message':'Product does not exist'}),404)
+        
+        try:
+            db.session.delete(product)
+            db.session.commit()
+            return make_response(jsonify({'message':'Product deleted successfully'}),200)
+        except Exception as e:
+            return make_response(jsonify({'message':str(e)}),400)
+
+
+
+
+
 
 class Category(Resource):
     @marshal_with(category)
@@ -209,25 +365,54 @@ class Category(Resource):
 class ViewRequests(Resource):
     @auth_token_required
     @roles_accepted('admin','manager')
-    @marshal_with(requests)
+    # @marshal_with(requests)
     def get(self):
         try:
             requests = Requests.query.all()
-            return requests
+            response = []
+            for request in requests:
+                response.append({
+                    'request_id':request.request_id,
+                    'username':request.username,
+                    'category_id':request.category_id,
+                    'request_type':request.request_type,
+                    'request_date':request.request_date,
+                    'status':request.status,
+                    'new_category_name':request.new_category_name,
+                    'new_category_description':request.new_category_description,
+                })
+            return make_response(jsonify(response),200)
         except Exception as e:
             return make_response(jsonify({'message':str(e)}),400)
-    
+        
+class ViewRequest(Resource):   
     @auth_token_required
     @roles_accepted('admin','manager')
-    @marshal_with(requests)
+    # @marshal_with(requests)
     def get(self,request_id):
         try:
             request = Requests.query.get(request_id)
             if not request:
                 return make_response(jsonify({'message':'Request does not exist'}),404)
-            return request
+            response = {
+                    'request_id':request.request_id,
+                    'username':request.username,
+                    'category_id':request.category_id,
+                    'request_type':request.request_type,
+                    'request_date':request.request_date,
+                    'status':request.status,
+                    'new_category_name':request.new_category_name,
+                    'new_category_description':request.new_category_description,
+            }
+            return make_response(jsonify(response),200)
         except Exception as e:
             return make_response(jsonify({'message':str(e)}),400)
+
+# class EditRequest(Resource):
+#     @auth_token_required
+#     @roles_required('manager')
+#     def put(self, request_id):
+#         data = req.get_json()
 
 class ApproveRequest(Resource):
     @auth_token_required

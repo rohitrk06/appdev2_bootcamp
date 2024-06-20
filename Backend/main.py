@@ -46,7 +46,11 @@ api.add_resource(Category,'/category','/category/<int:category_id>')
 api.add_resource(AllCategories,'/get_all_categories')
 api.add_resource(ApproveRequest,'/approve_request/<int:request_id>')
 api.add_resource(RejectRequest,'/reject_request/<int:request_id>')
-api.add_resource(ViewRequests,'/view_requests','/view_requests/<int:request_id>')
+api.add_resource(ViewRequests,'/view_requests')
+api.add_resource(ViewRequest,'/view_requests/<int:request_id>')
+
+api.add_resource(Product,'/product','/product/<int:product_id>')
+api.add_resource(AllProducts,'/get_all_products')
 
 if __name__ == '__main__':
     app.run(debug = True)
