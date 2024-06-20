@@ -41,9 +41,12 @@ api.add_resource(Login,'/login')
 api.add_resource(Register,'/register')
 api.add_resource(Logout,'/logout')
 
-from applications.store_management_api import AllCategories, Category
-api.add_resource(Category,'/category')
+from applications.store_management_api import *
+api.add_resource(Category,'/category','/category/<int:category_id>')
 api.add_resource(AllCategories,'/get_all_categories')
+api.add_resource(ApproveRequest,'/approve_request/<int:request_id>')
+api.add_resource(RejectRequest,'/reject_request/<int:request_id>')
+api.add_resource(ViewRequests,'/view_requests','/view_requests/<int:request_id>')
 
 if __name__ == '__main__':
     app.run(debug = True)
