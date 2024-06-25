@@ -5,6 +5,7 @@ from applications.database import db
 from applications.config import Config
 from flask_restful import Api
 from applications.user_datastore import user_datastore
+from flask_cors import CORS
 
 from flask_security import Security, hash_password
 
@@ -33,7 +34,7 @@ def create_app():
 
 
 app, api = create_app() 
-
+CORS(app)
 
 from applications.auth_api import Login, Register, Logout
 
