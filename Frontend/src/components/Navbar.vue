@@ -1,5 +1,10 @@
 <script setup>
-import { RouterLink} from 'vue-router'
+import { RouterLink} from 'vue-router';
+import { auth } from '@/stores/auth';
+
+const auth_store = auth();
+
+
 </script>
 
 <template>
@@ -13,8 +18,17 @@ import { RouterLink} from 'vue-router'
             </form>
     
             <ul class="nav justify-content-end ">
-                <li class="nav-item">
+                <li class="nav-item" v-if="!auth_store.isAuthenticated">
                     <RouterLink class="nav-link" to="/login">Login</RouterLink>
+                </li>
+                <li class="nav-item" v-if="!auth_store.isAuthenticated">
+                    <RouterLink class="nav-link" to="/register">Register</RouterLink>
+                </li>
+                <li class="nav-item" v-if="auth_store.isAuthenticated">
+                    <RouterLink class="nav-link" to="/logout">Logout</RouterLink>
+                </li>
+                <li class="nav-item disabled" v-if="auth_store.isAuthenticated">
+                    <a class="nav-link">{{auth_store.username}}</a>
                 </li>
             </ul>
 

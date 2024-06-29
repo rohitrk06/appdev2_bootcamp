@@ -3,10 +3,12 @@ import { RouterLink } from 'vue-router';
 import { auth } from '@/stores/auth';
 import { messageStore } from '@/stores/messageStore';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 const email = ref('');
 const password = ref('');
 
+const router = useRouter();
 
 const auth_store = auth();
 const message_store = messageStore();
@@ -17,8 +19,11 @@ async function onSubmit() {
     password: password.value
   }
   auth_store.login(data).then(
-    ()=>{
-      message_store.setmessage(data.message)
+    (resp)=>{
+      message_store.setmessage(resp.message)
+      if(resp.status){
+        router.push({path: '/'})
+      }
     }
   )
 }

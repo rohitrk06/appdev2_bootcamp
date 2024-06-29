@@ -6,7 +6,7 @@ export const messageStore = defineStore('messageStore',()=>{
 
     function setmessage(message){
         flash_message.value = message
-        setInterval(()=>{flash_message.value=''},10000)
+        setTimeout(()=>{flash_message.value=''},10000)
     }
 
     const message = computed(()=> flash_message.value)
