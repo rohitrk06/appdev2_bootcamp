@@ -51,7 +51,8 @@ api.add_resource(ViewRequests,'/view_requests')
 api.add_resource(ViewRequest,'/view_requests/<int:request_id>')
 
 api.add_resource(Product,'/product','/product/<int:product_id>')
-api.add_resource(AllProducts,'/get_all_products')
+# api.add_resource(AllProducts,'/category/<int:category_id>/get_all_products')
+api.add_resource(ProductsAPI,'/<int:category_id>/products')
 
 if __name__ == '__main__':
     app.run(debug = True)

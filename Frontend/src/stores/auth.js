@@ -152,5 +152,5 @@ export const auth = defineStore('auth',()=>{
     }
 
 
-    return {login, logout, register ,token, username, isAuthenticated}
+    return {login, logout, register ,token, username, isAuthenticated, backend_url}
 });

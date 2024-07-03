@@ -2,6 +2,7 @@ from flask_restful import Resource, marshal_with
 from flask import make_response, jsonify, request as req
 from flask_security import auth_token_required, roles_required, roles_accepted, current_user
 from applications.model import *
+from applications.model import Product as prd
 from applications.marshal_fields import *
 from datetime import datetime
 
@@ -10,13 +11,17 @@ class AllCategories(Resource):
     def get(self):
         categories = Categories.query.all()
         return categories
+    
 
-class AllProducts(Resource):
-    def get(self):
-        products = Product.query.all()
+class ProductsAPI(Resource):
+    def get(self, category_id):
+        category = Categories.query.get(category_id)
+        if not category:
+            return make_response(jsonify({'message':'Category does not exist'}),404)
+        
+        products = prd.query.filter_by(category_id=category_id).all()
         response = []
         for product in products:
-            category = Categories.query.get(product.category_id)
             response.append({
                 'product_id':product.product_id,
                 'name':product.name,
@@ -26,13 +31,33 @@ class AllProducts(Resource):
                 'manufacture_date':product.manufacture_date,
                 'expiry_date':product.expiry_date,
                 'cost_price':product.cost_price,
-                'category':{
-                    'category_id':category.category_id,
-                    'name':category.name,
-                    'description':category.description
-                }
+                'category_id':product.category_id
             })
         return make_response(jsonify(response),200)
+    
+
+# class AllProducts(Resource):
+#     def get(self, category_id):
+#         products = Product.query.filter_by(category_id=category_id).all()
+#         response = []
+#         for product in products:
+#             category = Categories.query.get(product.category_id)
+#             response.append({
+#                 'product_id':product.product_id,
+#                 'name':product.name,
+#                 'description':product.description,
+#                 'selling_price':product.selling_price,
+#                 'stock':product.stock,
+#                 'manufacture_date':product.manufacture_date,
+#                 'expiry_date':product.expiry_date,
+#                 'cost_price':product.cost_price,
+#                 'category':{
+#                     'category_id':category.category_id,
+#                     'name':category.name,
+#                     'description':category.description
+#                 }
+#             })
+#         return make_response(jsonify(response),200)
 
 class Product(Resource):
     def get(self, product_id):

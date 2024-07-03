@@ -3,6 +3,7 @@ import { RouterLink } from 'vue-router';
 import { auth } from '@/stores/auth';
 import { messageStore } from '@/stores/messageStore';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 const username = ref('');
 const email = ref('');
@@ -10,29 +11,46 @@ const password = ref('');
 const confirm_password = ref('');
 const address = ref('');
 const role = ref('');
+const router = useRouter();
 
 const auth_store = auth();
 const message_store = messageStore();
 
+function validate_input(){
+    if (password.value.length < 8){
+        message_store.setmessage('Password should be atleast 8 characters')
+        return false
+    }
+    if(password.value !== confirm_password.value){
+        message_store.setmessage('Password and Confirm Password should be same')
+        return false
+    }
+    if(username.value.length < 3){
+        message_store.setmessage('Username should be atleast 3 characters and alphanumeric')
+        return false
+    }
+    return true
+}
 
 function onSubmit(){
-    const data = {
-        username: username.value,
-        email: email.value,
-        password: password.value,
-        confirm_password: confirm_password.value,
-        address: address.value,
-        role: role.value
-    }
-    auth_store.register(data).then(
-        (resp)=>{
-            message_store.setmessage(resp.message)
-            if(resp.status){
-                router.push({path: '/'})
-            }
+    if (validate_input()){
+        const data = {
+            username: username.value,
+            email: email.value,
+            password: password.value,
+            confirm_password: confirm_password.value,
+            address: address.value,
+            role: role.value
         }
-    )
-
+        auth_store.register(data).then(
+            (resp)=>{
+                message_store.setmessage(resp.message)
+                if(resp.status){
+                    router.push({path: '/'})
+                }
+            }
+        )
+    }
 }
 
 </script>
@@ -68,7 +86,7 @@ function onSubmit(){
             <div class="mb-3">
                 <label for="phone" class="form-label"><strong>Role</strong></label>
                 <div class="input-group d-flex align-center">
-                  <input type="radio" id="storemanager" v-model="role" value="store_manager" required>&ensp;
+                  <input type="radio" id="storemanager" v-model="role" value="manager" required>&ensp;
                   <label for="storemanager"> Store Manager </label>&ensp; &ensp;
                   <input type="radio" id="customer" v-model="role" value="customer" required>&ensp;
                   <label for="customer">Customer</label>
