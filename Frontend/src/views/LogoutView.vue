@@ -14,9 +14,7 @@ auth_store.logout().then(
     (resp)=>{
         message_store.setmessage(resp.message)
         console.log(resp)
-        if (resp.status){
-            router.push({path: '/'})
-        }
+        router.push({path: '/'})
         // console.log($parent)
     }
 )

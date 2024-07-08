@@ -7,6 +7,7 @@ export const auth = defineStore('auth',()=>{
     const token = ref(computed(()=>localStorage.getItem('token')))
     const user_details = ref(computed(()=>localStorage.getItem('user_details')))
     const username = computed(()=>JSON.parse(user_details.value).username)
+    const role = computed(()=>JSON.parse(user_details.value).role)
 
     const isAuthenticated = computed(()=>token.value !== null)
 
@@ -152,5 +153,5 @@ export const auth = defineStore('auth',()=>{
     }
 
 
-    return {login, logout, register ,token, username, isAuthenticated, backend_url}
+    return {login, logout, register ,token, username, isAuthenticated, backend_url, role}
 });

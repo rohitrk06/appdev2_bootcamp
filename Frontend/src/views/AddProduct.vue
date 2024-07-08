@@ -79,12 +79,12 @@ function validate_input(){
 
 function addProduct(){
     const product_details = {
-        'product_name': product_name.value,
+        'name': product_name.value,
         'description': description.value,
         'cost_price': cost_price.value,
         'selling_price': selling_price.value,
         'category_name': categorySelected.value,
-        'mfg_date': mfg_date.value,
+        'manufacture_date': mfg_date.value,
         'expiry_date': expiry_date.value,
         'stock': stock.value
     }
@@ -115,7 +115,7 @@ function addProduct(){
                 ).then(
                     (data)=>{
                         message_store.setmessage(data.message)
-                        //    router.push({path: '/home'})
+                        router.push('/')
                     }
                 )
         }
@@ -153,9 +153,8 @@ function addProduct(){
             </div>
             <div class="mb-3">
                 <label for="category" class="form-label">Category</label>
-                <select class="form-select" id="category" v-model = categorySelected>
-                    <option selected>Choose...</option>
-                    <option value="{{ category.category_id }}" v-for="category in categories">{{ category.name }}</option>
+                <select class="form-select" id="category" v-model="categorySelected">
+                    <option v-for="category in categories" :value="category.name" >{{ category.name }}</option>
                 </select>
             </div>
             <div class="row">

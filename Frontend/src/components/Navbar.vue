@@ -18,6 +18,12 @@ const auth_store = auth();
             </form>
     
             <ul class="nav justify-content-end ">
+                <li class="nav-item" v-if="auth_store.isAuthenticated && auth_store.role === 'manager'">
+                    <RouterLink class="nav-link" to="/add_product">Add Product</RouterLink>
+                </li>
+                <li class="nav-item" v-if="auth_store.isAuthenticated && auth_store.role !== 'user'">
+                    <RouterLink class="nav-link" to="/add_category">Add Category</RouterLink>
+                </li>
                 <li class="nav-item" v-if="!auth_store.isAuthenticated">
                     <RouterLink class="nav-link" to="/login">Login</RouterLink>
                 </li>

@@ -3,6 +3,7 @@ import { defineProps, ref } from 'vue';
 import { auth } from '@/stores/auth';
 import { messageStore } from '@/stores/messageStore';
 import { onMounted } from 'vue';
+import Product from '@/components/Product.vue';
 
 const auth_store = auth();
 const message_store = messageStore()
@@ -14,8 +15,6 @@ const category_data = ref({
     category_products: []
 
 });
-
-let category_name = ref('');
 
 onMounted(()=>{
     getCategory(category.category_id);
@@ -37,7 +36,9 @@ function getProducts(category_id) {
             ).then(
                 (data)=>{
                     console.log(data);
-                    // category_data.category_products = data;
+                    category_data.value.category_products = data;
+                    console.log(category_data.category_products);
+                    console.log(category_data.value);
                 }
             )
     }
@@ -60,8 +61,12 @@ function getCategory(category_id) {
                 }
             ).then(
                 (data)=>{
-                    console.log(data.name);
-                    category_name = data.name
+                    console.log(data);
+                    category_data.value.category_id = data.category_id;
+                    category_data.value.category_name = data.name;
+                    category_data.value.category_description = data.description;
+
+                    // category_name = data.name
                 }
             )
     }
@@ -74,7 +79,10 @@ function getCategory(category_id) {
 
 <template>
 <div class="container-fluid mt-5 p-5">
-    <p class="h1">{{category_name}}</p>
+    <p class="h1">{{category_data.category_name}}</p>
     <p>Hi</p>
+    <div class="row">
+        <Product v-for="product in category_data.category_products" :product="product" :key="product.id"/>
+    </div>  
 </div>
 </template>

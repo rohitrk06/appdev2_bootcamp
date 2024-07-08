@@ -59,7 +59,7 @@ class ProductsAPI(Resource):
 #             })
 #         return make_response(jsonify(response),200)
 
-class Product(Resource):
+class Products(Resource):
     def get(self, product_id):
         product = Product.query.get(product_id)
         if not product:
@@ -91,11 +91,11 @@ class Product(Resource):
 
         name = data.get('name')
         description = data.get('description')
-        selling_price = data.get('selling_price')
-        stock = data.get('stock')
-        manufacture_date = data.get('manufacture_date')
-        expiry_date = data.get('expiry_date')
-        cost_price = data.get('cost_price')
+        selling_price = float(data.get('selling_price'))
+        stock = int(data.get('stock'))
+        manufacture_date = datetime.strptime(data.get('manufacture_date'),'%Y-%m-%d')
+        expiry_date = datetime.strptime(data.get('expiry_date'),'%Y-%m-%d')
+        cost_price = float(data.get('cost_price'))
         category_name = data.get('category_name')
 
         if not name or not selling_price or not stock or not manufacture_date or not cost_price or not category_name:
