@@ -88,7 +88,7 @@ function onSubmit(){
                 <div class="input-group d-flex align-center">
                   <input type="radio" id="storemanager" v-model="role" value="manager" required>&ensp;
                   <label for="storemanager"> Store Manager </label>&ensp; &ensp;
-                  <input type="radio" id="customer" v-model="role" value="customer" required>&ensp;
+                  <input type="radio" id="customer" v-model="role" value="user" required>&ensp;
                   <label for="customer">Customer</label>
                 </div>
             </div>

@@ -72,8 +72,8 @@ class Products(Resource):
             'description':product.description,
             'selling_price':product.selling_price,
             'stock':product.stock,
-            'manufacture_date':product.manufacture_date,
-            'expiry_date':product.expiry_date,
+            'manufacture_date':datetime.strftime(product.manufacture_date,'%Y-%m-%d'),
+            'expiry_date':datetime.strftime(product.expiry_date,'%Y-%m-%d') if product.expiry_date else None,
             'cost_price':product.cost_price,
             'category':{
                 'category_id':category.category_id,
@@ -138,12 +138,13 @@ class Products(Resource):
 
         name = data.get('name')
         description = data.get('description')
-        selling_price = data.get('selling_price')
-        stock = data.get('stock')
-        manufacture_date = data.get('manufacture_date')
-        expiry_date = data.get('expiry_date')
-        cost_price = data.get('cost_price')
+        selling_price = float(data.get('selling_price'))
+        stock = int(data.get('stock'))
+        manufacture_date = datetime.strptime(data.get('manufacture_date'),'%Y-%m-%d')
+        expiry_date = datetime.strptime(data.get('expiry_date'),'%Y-%m-%d')
+        cost_price = float(data.get('cost_price'))
         category_name = data.get('category_name')
+
 
         if not name and not description and not selling_price and not stock and not manufacture_date and not cost_price and not category_name and not expiry_date:
             return make_response(jsonify({'message':'Edit request is empty with any data'}),400)

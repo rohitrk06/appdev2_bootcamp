@@ -12,9 +12,12 @@ const category_data = ref({
     category_id: 0,
     category_name: '',
     category_description: '',
-    category_products: []
-
+    products: []
 });
+
+// const category_products = ref({
+//     'products': []
+// });
 
 onMounted(()=>{
     getCategory(category.category_id);
@@ -36,9 +39,9 @@ function getProducts(category_id) {
             ).then(
                 (data)=>{
                     console.log(data);
-                    category_data.value.category_products = data;
-                    console.log(category_data.category_products);
-                    console.log(category_data.value);
+                    category_data.value.products = data;
+                    console.log('From categories component');
+                    console.log(category_data.value.products);
                 }
             )
     }
@@ -78,11 +81,12 @@ function getCategory(category_id) {
 </script>
 
 <template>
-<div class="container-fluid mt-5 p-5">
+<div class="container-fluid mt-1 p-2">
     <p class="h1">{{category_data.category_name}}</p>
-    <p>Hi</p>
+    <hr>
     <div class="row">
-        <Product v-for="product in category_data.category_products" :product="product" :key="product.id"/>
+        <Product v-for="product in category_data.products" :product_details="product" :key="product.id"/>
+        <!-- <Product v-for="product in category_data.products" :product_details="product" :key="product.id"/> -->
     </div>  
 </div>
 </template>
