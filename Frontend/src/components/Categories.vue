@@ -3,6 +3,7 @@ import { defineProps, ref } from 'vue';
 import { auth } from '@/stores/auth';
 import { messageStore } from '@/stores/messageStore';
 import { onMounted } from 'vue';
+import {computed} from 'vue';
 import Product from '@/components/Product.vue';
 
 const auth_store = auth();
@@ -78,11 +79,23 @@ function getCategory(category_id) {
     }
 }
 
+const update_url = computed(()=>`/update_category/${category_data.value.category_id}`);
+const delete_url = computed(()=>`/delete_category/${category_data.value.category_id}`);
+
 </script>
 
 <template>
 <div class="container-fluid mt-1 p-2">
-    <p class="h1">{{category_data.category_name}}</p>
+    <div class="row">
+        <div class="col-8">
+            <p class="h1">{{category_data.category_name}}</p>
+            <p>{{category_data.category_description}}</p>
+        </div>
+        <div class="col-4 d-flex justify-content-end">
+            <RouterLink class="btn btn-primary p-2 m-3" :to="update_url" >Update</RouterLink>
+            <RouterLink class="btn btn-primary p-2 m-3" :to="delete_url" >Delete</RouterLink>
+        </div>
+    </div>
     <hr>
     <div class="row">
         <Product v-for="product in category_data.products" :product_details="product" :key="product.id"/>

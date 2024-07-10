@@ -13,32 +13,9 @@ const product = defineProps(['product_details']);
 const update_url = computed(() => {
     return `/update_product/${product.product_details.product_id}`
 })
-
-function deleteProduct(product_id){
-    try{
-        fetch(`${auth_store.backend_url}/api/v1/product/${product_id}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-                'Authentication-Token':auth_store.token
-            },
-        }).then(
-            (response) =>{
-                return response.json();
-            }
-        ).then(
-            (data)=>{
-                message_store.setmessage(data.message);
-                router.push('/')
-            }
-        )
-    }
-    catch(error){
-        console.log(error);
-    
-    }
-}
+const delete_url = computed(() => {
+    return `/delete_product/${product.product_details.product_id}`
+})
 
 </script>
 
@@ -65,7 +42,7 @@ function deleteProduct(product_id){
                         <RouterLink class="btn btn-primary" :to="update_url" >Update</RouterLink>
                     </div>
                     <div class="col-6">
-                        <button class="btn btn-primary" @click="deleteProduct(product.product_details.product_id)">Delete</button>
+                        <RouterLink class="btn btn-primary" :to="delete_url">Delete</RouterLink>
                     </div>
                 </div>
                 <div class="contain-fluid mt-3" v-if="auth_store.isAuthenticated && auth_store.role === 'user'">

@@ -38,6 +38,21 @@ const router = createRouter({
       path:'/update_product/:id',
       name: 'update_product',
       component: () => import('../views/EditProduct.vue')
+    },
+    {
+      path:'/delete_product/:id',
+      name: 'delete_product',
+      component: () => import('../views/deleteProduct.vue')
+    },
+    {
+      path:'/update_category/:id',
+      name: 'update_category',
+      component: () => import('../views/EditCategory.vue')
+    },
+    {
+      path:'/delete_category/:id',
+      name: 'delete_category',
+      component: ()=> import('../views/DeleteCategory.vue')
     }
   ]
 })
